@@ -4,6 +4,8 @@
 
 Press `Cmd+Shift+K` (Mac) or `Ctrl+Shift+K` (Windows/Linux) to diagnose any webpage and get the cure: clean, portable Markdown.
 
+https://github.com/user-attachments/assets/f3e8da6a-ca94-4db6-8e85-95afc816f802
+
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Chrome Web Store](https://img.shields.io/badge/platform-Chrome-brightgreen.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)
