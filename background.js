@@ -1,12 +1,29 @@
 // Background service worker for handling commands and tab creation
 
 // Listen for keyboard command
-chrome.commands.onCommand.addListener((command) => {
+chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'convert-to-markdown') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    try {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const activeTab = tabs[0];
       
-      // Send message to content script to convert page
+      // First, inject the required scripts if they're not already loaded
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          files: [
+            'lib/readability.js',
+            'lib/turndown.js',
+            'lib/turndown-plugin-gfm.js',
+            'content.js'
+          ]
+        });
+      } catch (e) {
+        // Scripts might already be injected, that's okay
+        console.log('Script injection result:', e);
+      }
+      
+      // Now send the message
       chrome.tabs.sendMessage(activeTab.id, { action: 'convertToMarkdown' }, (response) => {
         if (chrome.runtime.lastError) {
           console.error('Error:', chrome.runtime.lastError);
@@ -19,7 +36,9 @@ chrome.commands.onCommand.addListener((command) => {
           console.error('Conversion failed:', response?.error);
         }
       });
-    });
+    } catch (error) {
+      console.error('Command error:', error);
+    }
   }
 });
 
