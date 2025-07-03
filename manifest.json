@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "WebMD - Web to Markdown",
   "version": "1.0.0",
-  "description": "The cure for messy web content. Convert any webpage to clean Markdown.",
+  "description": "Convert any webpage to clean, portable Markdown. Extract articles, preserve formatting, and export instantly.",
   "permissions": [
     "activeTab",
     "storage",
