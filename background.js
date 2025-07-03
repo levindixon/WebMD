@@ -215,7 +215,7 @@ function createMarkdownTab(data) {
       ${metadata.author ? `<div>Author: ${metadata.author}</div>` : ''}
     </div>
     
-    <textarea class="markdown-content" id="markdown-content" readonly>${escapeHtml(markdown)}</textarea>
+    <textarea class="markdown-content" id="markdown-content" readonly>${markdown.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;')}</textarea>
   </div>
   
   <div class="status" id="status">Copied to clipboard!</div>
@@ -233,24 +233,71 @@ function createMarkdownTab(data) {
       this.focus();
     });
     
+    // Update the textarea with the actual markdown content (not escaped)
+    document.getElementById('markdown-content').value = markdownContent;
+    
     function copyToClipboard() {
-      navigator.clipboard.writeText(markdownContent).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        const status = document.getElementById('status');
-        
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        status.classList.add('show');
-        
-        setTimeout(() => {
-          btn.textContent = 'Copy to Clipboard';
-          btn.classList.remove('copied');
-          status.classList.remove('show');
-        }, 2000);
-      }).catch(err => {
-        console.error('Failed to copy:', err);
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(markdownContent).then(() => {
+          showCopySuccess();
+        }).catch(err => {
+          console.error('Clipboard API failed:', err);
+          fallbackCopy();
+        });
+      } else {
+        // Use fallback method
+        fallbackCopy();
+      }
+    }
+    
+    function fallbackCopy() {
+      // Create a temporary textarea element
+      const textarea = document.createElement('textarea');
+      textarea.value = markdownContent;
+      textarea.style.position = 'fixed';
+      textarea.style.top = '0';
+      textarea.style.left = '0';
+      textarea.style.width = '2em';
+      textarea.style.height = '2em';
+      textarea.style.padding = '0';
+      textarea.style.border = 'none';
+      textarea.style.outline = 'none';
+      textarea.style.boxShadow = 'none';
+      textarea.style.background = 'transparent';
+      
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopySuccess();
+        } else {
+          alert('Failed to copy to clipboard');
+        }
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
         alert('Failed to copy to clipboard');
-      });
+      }
+      
+      document.body.removeChild(textarea);
+    }
+    
+    function showCopySuccess() {
+      const btn = document.querySelector('.copy-btn');
+      const status = document.getElementById('status');
+      
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      status.classList.add('show');
+      
+      setTimeout(() => {
+        btn.textContent = 'Copy to Clipboard';
+        btn.classList.remove('copied');
+        status.classList.remove('show');
+      }, 2000);
     }
     
     function downloadMarkdown() {
