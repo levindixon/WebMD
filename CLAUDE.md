@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a Chrome extension that converts web pages to Markdown format using Mozilla's Readability.js for article extraction and Turndown.js for HTML-to-Markdown conversion. The extension supports keyboard shortcuts (Cmd+Shift+K on Mac, Ctrl+Shift+K on Windows/Linux) and provides a popup interface.
+WebMD is a Chrome extension that converts web pages to Markdown format - "the cure for messy web content." It uses Mozilla's Readability.js for article extraction and Turndown.js for HTML-to-Markdown conversion. The extension supports keyboard shortcuts (Cmd+Shift+K on Mac, Ctrl+Shift+K on Windows/Linux) and provides a popup interface with a medical-themed approach to content extraction.
 
 ## Architecture
 

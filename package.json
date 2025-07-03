@@ -1,7 +1,7 @@
 {
-  "name": "anything-to-md",
+  "name": "webmd-chrome-extension",
   "version": "1.0.0",
-  "description": "Chrome extension to convert web articles to Markdown using Readability.js and Turndown",
+  "description": "WebMD - The cure for messy web content. Chrome extension that converts webpages to clean Markdown.",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",

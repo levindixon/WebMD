@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Setup script for Page to Markdown Chrome Extension
+# Setup script for WebMD Chrome Extension
 
-echo "Setting up Page to Markdown Chrome Extension..."
+echo "Setting up WebMD (Web to Markdown) Chrome Extension..."
 
 # Create lib directory
 mkdir -p lib

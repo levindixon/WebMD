@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Page to Markdown",
+  "name": "WebMD - Web to Markdown",
   "version": "1.0.0",
-  "description": "Convert any web page to Markdown with Cmd+M+D",
+  "description": "The cure for messy web content. Convert any webpage to clean Markdown.",
   "permissions": [
     "activeTab",
     "storage",

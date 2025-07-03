@@ -1,15 +1,15 @@
-# Page to Markdown Chrome Extension
+# WebMD - Web to Markdown Chrome Extension
 
-Convert any web page to clean, well-formatted Markdown with a simple keyboard shortcut (Cmd+M+D on Mac, Ctrl+Shift+M on Windows/Linux).
+📋 WebMD transforms web pages into Markdown documents with surgical precision. This Chrome extension extracts content intelligently, preserves formatting perfectly, and exports to GitHub Flavored Markdown instantly. Press Cmd+Shift+K to diagnose any webpage and get the cure: clean, portable Markdown.
 
 ## Features
 
-- **Smart Conversion**: Uses Readability.js to extract article content when possible, falling back to full page conversion
-- **Accurate Formatting**: Preserves headings, lists, tables, code blocks, and more
-- **GitHub Flavored Markdown**: Supports tables, task lists, and strikethrough
-- **Metadata Extraction**: Captures title, author, date, and source URL
-- **One-Click Copy**: Easily copy the converted Markdown to your clipboard
-- **Download Option**: Save the Markdown as a .md file
+- **Smart Article Extraction**: Uses Mozilla's Readability.js to diagnose and extract the main content
+- **Surgical Precision**: Preserves headings, lists, tables, code blocks with medical accuracy
+- **GitHub Flavored Markdown**: Full support for tables, task lists, and strikethrough
+- **Metadata Extraction**: Captures vital signs (title, author, date, source URL)
+- **Instant Treatment**: One-click copy to clipboard or download as .md file
+- **Non-invasive**: All processing happens locally - no data sent to external servers
 
 ## Installation
 
@@ -35,12 +35,12 @@ Alternatively, click the extension icon and press "Convert Current Page".
 
 ## How It Works
 
-The extension uses a hybrid approach for maximum accuracy:
+WebMD uses a diagnostic approach to convert web content:
 
-1. **Article Detection**: First attempts to extract article content using Mozilla's Readability.js
-2. **Clean Extraction**: If article content is detected, converts only the main content
-3. **Fallback Conversion**: For non-article pages, converts the main content area or full page
-4. **Markdown Generation**: Uses Turndown.js with GitHub Flavored Markdown for accurate conversion
+1. **Initial Diagnosis**: Examines the page using Mozilla's Readability.js
+2. **Content Extraction**: Surgically removes the main content from surrounding clutter
+3. **Emergency Fallback**: For non-article pages, performs full-page conversion
+4. **Treatment**: Applies Turndown.js with GitHub Flavored Markdown for the cure
 
 ## Configuration
 
