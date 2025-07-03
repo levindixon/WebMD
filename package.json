@@ -1,0 +1,33 @@
+{
+  "name": "anything-to-md",
+  "version": "1.0.0",
+  "description": "Chrome extension to convert web articles to Markdown using Readability.js and Turndown",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "clean": "rm -rf dist",
+    "copy-libs": "mkdir -p dist/lib && cp node_modules/@mozilla/readability/Readability.js dist/lib/readability.min.js && cp node_modules/turndown/dist/turndown.js dist/lib/turndown.min.js && cp node_modules/turndown-plugin-gfm/dist/turndown-plugin-gfm.js dist/lib/turndown-plugin-gfm.min.js",
+    "bundle": "npm run clean && npm run build && npm run copy-libs"
+  },
+  "keywords": [
+    "chrome-extension",
+    "markdown",
+    "readability",
+    "turndown",
+    "article-extraction"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4",
+    "copy-webpack-plugin": "^12.0.2",
+    "terser-webpack-plugin": "^5.3.10"
+  }
+}

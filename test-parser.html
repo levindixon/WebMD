@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML to Markdown Parser Test Cases</title>
+</head>
+<body>
+    <h1>Test Cases for HTML to Markdown Parser</h1>
+    
+    <!-- Basic Elements -->
+    <h2>Basic Text Formatting</h2>
+    <p>This is a <strong>bold</strong> and <em>italic</em> text with <code>inline code</code>.</p>
+    <p>Nested formatting: <strong>bold with <em>italic inside</em></strong></p>
+    
+    <!-- Links and Images -->
+    <h2>Links and Images</h2>
+    <p>Visit <a href="https://example.com" title="Example Site">this website</a> for more info.</p>
+    <p>Relative link: <a href="/page">Local Page</a></p>
+    <img src="https://via.placeholder.com/150" alt="Placeholder Image" title="Test Image">
+    
+    <!-- Lists -->
+    <h2>Lists</h2>
+    <ul>
+        <li>First item</li>
+        <li>Second item
+            <ul>
+                <li>Nested item 1</li>
+                <li>Nested item 2
+                    <ol>
+                        <li>Double nested ordered</li>
+                        <li>Another ordered item</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+        <li>Third item</li>
+    </ul>
+    
+    <!-- Code Blocks -->
+    <h2>Code Blocks</h2>
+    <pre><code class="language-javascript">function helloWorld() {
+    console.log("Hello, World!");
+    return true;
+}</code></pre>
+    
+    <!-- Blockquotes -->
+    <h2>Blockquotes</h2>
+    <blockquote>
+        <p>This is a blockquote.</p>
+        <blockquote>
+            <p>This is a nested blockquote.</p>
+        </blockquote>
+        <p>Back to the first level.</p>
+    </blockquote>
+    
+    <!-- Tables -->
+    <h2>Tables</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+                <th>Header 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Cell 1</td>
+                <td>Cell 2</td>
+                <td>Cell 3</td>
+            </tr>
+            <tr>
+                <td>Long content cell</td>
+                <td>Short</td>
+                <td>Medium length</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Edge Cases -->
+    <h2>Edge Cases</h2>
+    <p>Special characters: * _ ` [ ] ( ) # + - . ! |</p>
+    <p>Multiple     spaces     should     be     normalized</p>
+    <p>Line<br>breaks<br>test</p>
+    <pre>Preformatted text preserves    spacing
+and special * characters _ without ` escaping</pre>
+    
+    <!-- Complex Nesting -->
+    <div>
+        <p>Paragraph inside div with <a href="#">link containing <strong>bold <em>and italic</em></strong></a> text.</p>
+    </div>
+    
+    <!-- Empty Elements -->
+    <p></p>
+    <h3></h3>
+    <ul>
+        <li></li>
+    </ul>
+</body>
+</html>
