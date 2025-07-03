@@ -1,13 +1,25 @@
-// Background service worker for handling commands and tab creation
+/**
+ * WebMD Background Service Worker
+ * 
+ * Handles Chrome extension commands, keyboard shortcuts, and new tab creation
+ * for displaying converted Markdown content. This service worker runs in the
+ * background and coordinates between the popup, content scripts, and browser.
+ */
 
-// Listen for keyboard command
+/**
+ * Chrome Commands API listener for keyboard shortcuts
+ * Handles the global keyboard shortcut (Cmd+Shift+K / Ctrl+Shift+K)
+ * for converting the current page to Markdown
+ */
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'convert-to-markdown') {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const activeTab = tabs[0];
       
-      // First, inject the required scripts if they're not already loaded
+      // Programmatically inject required scripts into the active tab
+      // This ensures content scripts are available even on pages loaded
+      // before the extension was installed or on restricted pages
       try {
         await chrome.scripting.executeScript({
           target: { tabId: activeTab.id },
@@ -19,8 +31,8 @@ chrome.commands.onCommand.addListener(async (command) => {
           ]
         });
       } catch (e) {
-        // Scripts might already be injected, that's okay
-        console.log('Script injection result:', e);
+        // Scripts might already be injected from manifest or previous injection
+        // This is expected behavior and not an error condition
       }
       
       // Now send the message
@@ -42,7 +54,10 @@ chrome.commands.onCommand.addListener(async (command) => {
   }
 });
 
-// Listen for messages from content script
+/**
+ * Runtime message listener for communication with content scripts and popup
+ * Handles requests to open new tabs with converted Markdown content
+ */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'openMarkdownTab') {
     createMarkdownTab(request.data);
@@ -51,11 +66,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-// Create a new tab with the markdown content
+/**
+ * Creates a new browser tab displaying the converted Markdown content
+ * Generates a complete HTML page with styling and interactive features
+ * @param {Object} data - Object containing markdown string and metadata
+ * @param {string} data.markdown - The converted Markdown content
+ * @param {Object} data.metadata - Metadata about the source page
+ */
 function createMarkdownTab(data) {
   const { markdown, metadata } = data;
   
-  // Create the HTML content for the new tab
+  // Generate a complete HTML document for displaying the Markdown
+  // This creates a self-contained page with embedded styles and scripts
   const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -235,14 +257,19 @@ function createMarkdownTab(data) {
 </body>
 </html>`;
 
-  // Create a data URL for the HTML
+  // Create a data URL from the HTML content
+  // This allows us to open a fully-styled page without hosting files
   const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent);
   
-  // Open in new tab
+  // Open the generated page in a new browser tab
   chrome.tabs.create({ url: dataUrl });
 }
 
-// Helper function to escape HTML
+/**
+ * Escapes HTML special characters to prevent XSS when displaying content
+ * @param {string} text - Raw text that may contain HTML characters
+ * @returns {string} Text with HTML characters properly escaped
+ */
 function escapeHtml(text) {
   const map = {
     '&': '&amp;',

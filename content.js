@@ -1,8 +1,18 @@
-// Content script for HTML to Markdown conversion
+/**
+ * WebMD Content Script - HTML to Markdown Converter
+ * 
+ * This content script handles the core conversion logic for transforming
+ * web pages into clean Markdown format. It uses Mozilla's Readability.js
+ * for intelligent article extraction and Turndown.js for HTML-to-Markdown
+ * conversion.
+ */
 (function() {
   'use strict';
 
-  // Initialize Turndown with GitHub Flavored Markdown
+  /**
+   * Initialize Turndown service with GitHub Flavored Markdown settings
+   * @type {TurndownService}
+   */
   const turndownService = new TurndownService({
     headingStyle: 'atx',
     bulletListMarker: '-',
@@ -14,10 +24,14 @@
     preformattedCode: true
   });
 
-  // Enable GFM plugin for tables, strikethrough, and task lists
+  // Enable GitHub Flavored Markdown plugin for enhanced formatting support
+  // This adds support for tables, strikethrough text, and task lists
   turndownService.use(turndownPluginGfm.gfm);
 
-  // Custom rule for preserving code language hints
+  /**
+   * Custom Turndown rule for handling code blocks with language hints
+   * Preserves syntax highlighting information from class attributes
+   */
   turndownService.addRule('fencedCodeBlock', {
     filter: function (node, options) {
       return (
@@ -41,7 +55,10 @@
     }
   });
 
-  // Try to extract article content using Readability
+  /**
+   * Attempts to extract main article content using Mozilla's Readability
+   * @returns {Object|null} Article object with content and metadata, or null if extraction fails
+   */
   function extractArticleContent() {
     try {
       // Clone the document to avoid modifying the original
@@ -65,7 +82,12 @@
     return null;
   }
 
-  // Convert HTML to Markdown
+  /**
+   * Main conversion function that transforms the current page to Markdown
+   * Uses Readability for article extraction when possible, falls back to
+   * full page conversion for non-article content
+   * @returns {Object} Object containing markdown string and metadata
+   */
   function convertToMarkdown() {
     let markdown = '';
     let metadata = {};
@@ -74,7 +96,8 @@
     const article = extractArticleContent();
     
     if (article && article.isArticle) {
-      // Article detected - use clean extracted content
+      // Article successfully extracted - use Readability's clean content
+      // Collect all available metadata for frontmatter
       metadata = {
         title: article.title,
         author: article.author,
@@ -103,7 +126,8 @@
       
     } else {
       // No article detected - fall back to full page conversion
-      // Try to find main content area
+      // Try to find main content area using common semantic selectors
+      // Listed in order of specificity and likelihood of containing main content
       const contentSelectors = [
         'main',
         'article',
@@ -125,14 +149,16 @@
         contentElement = document.body;
       }
       
-      // Clone to avoid modifying the page
+      // Clone the content element to avoid modifying the actual page DOM
       const contentClone = contentElement.cloneNode(true);
       
-      // Remove script and style tags
+      // Remove non-content elements that would create noise in Markdown
+      // This includes scripts, styles, and noscript tags
       const scripts = contentClone.querySelectorAll('script, style, noscript');
       scripts.forEach(el => el.remove());
       
-      // Remove hidden elements
+      // Remove visually hidden elements that shouldn't appear in text output
+      // Targets inline styles and hidden attribute
       const hidden = contentClone.querySelectorAll('[style*="display:none"], [style*="display: none"], [hidden]');
       hidden.forEach(el => el.remove());
       
@@ -156,7 +182,10 @@
     };
   }
 
-  // Listen for keyboard command
+  /**
+   * Message listener for conversion requests from popup or background script
+   * Handles the 'convertToMarkdown' action and sends back the result
+   */
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'convertToMarkdown') {
       try {
@@ -167,10 +196,16 @@
         sendResponse({ success: false, error: error.message });
       }
     }
-    return true; // Keep message channel open for async response
+    // Return true to indicate we'll send response asynchronously
+    // This keeps the message channel open for sendResponse
+    return true;
   });
 
-  // Also listen for direct keyboard shortcut (backup method)
+  /**
+   * Keyboard event listener for direct shortcut handling (legacy fallback)
+   * Note: Primary keyboard handling is done via Chrome Commands API in background.js
+   * This remains for backward compatibility
+   */
   document.addEventListener('keydown', (e) => {
     // Cmd+M+D on Mac, Ctrl+Shift+M on others
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;

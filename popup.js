@@ -1,18 +1,33 @@
-// Popup script for extension UI
+/**
+ * WebMD Popup Script
+ * 
+ * Manages the extension popup interface, including settings persistence,
+ * user interactions, and communication with content scripts. This script
+ * handles the main UI for manual conversions and configuration.
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Set platform-specific shortcut display
+  /**
+   * Display the correct keyboard shortcut based on user's operating system
+   * Mac uses Cmd key, Windows/Linux use Ctrl key
+   */
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   document.getElementById('shortcut').textContent = isMac ? 'Cmd+Shift+K' : 'Ctrl+Shift+K';
   
-  // Load saved settings
+  /**
+   * Load user preferences from Chrome sync storage
+   * Settings persist across browser sessions and sync across devices
+   */
   chrome.storage.sync.get(['useReadability', 'includeMetadata', 'autoCopy'], (items) => {
     document.getElementById('useReadability').checked = items.useReadability !== false;
     document.getElementById('includeMetadata').checked = items.includeMetadata !== false;
     document.getElementById('autoCopy').checked = items.autoCopy || false;
   });
   
-  // Save settings on change
+  /**
+   * Attach change listeners to all checkboxes for auto-saving settings
+   * Changes are immediately persisted to Chrome sync storage
+   */
   document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       chrome.storage.sync.set({
@@ -23,13 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // Convert button
+  /**
+   * Main conversion button click handler
+   * Injects necessary scripts and triggers the conversion process
+   */
   document.getElementById('convert').addEventListener('click', async () => {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const activeTab = tabs[0];
       
-      // First, inject the required scripts if they're not already loaded
+      /**
+       * Programmatically inject content scripts and dependencies
+       * This ensures scripts are available even on special pages where
+       * declarative injection might fail
+       */
       try {
         await chrome.scripting.executeScript({
           target: { tabId: activeTab.id },
@@ -41,11 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
           ]
         });
       } catch (e) {
-        // Scripts might already be injected, that's okay
-        console.log('Script injection result:', e);
+        // Expected when scripts are already injected - not an error
+        // This commonly happens on pages where scripts were previously injected
       }
       
-      // Now send the message
+      // Send conversion request to the content script
+      // The content script will process the page and return the Markdown
       chrome.tabs.sendMessage(activeTab.id, { action: 'convertToMarkdown' }, (response) => {
         if (chrome.runtime.lastError) {
           showStatus('Error: ' + chrome.runtime.lastError.message, 'error');
@@ -68,11 +91,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/**
+ * Displays temporary status messages in the popup UI
+ * @param {string} message - The message to display
+ * @param {string} type - Message type: 'success' or 'error' (affects color)
+ */
 function showStatus(message, type = 'success') {
   const status = document.getElementById('status');
   status.textContent = message;
   status.style.color = type === 'error' ? '#dc3545' : '#28a745';
   
+  // Auto-clear the status message after 3 seconds
   setTimeout(() => {
     status.textContent = '';
   }, 3000);
