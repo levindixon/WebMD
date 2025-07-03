@@ -162,8 +162,18 @@ function createMarkdownTab(data) {
       padding: 20px;
       border-radius: 4px;
       border: 1px solid #dee2e6;
-      max-height: 70vh;
+      height: 70vh;
+      min-height: 400px;
       overflow-y: auto;
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+      outline: none;
+    }
+    
+    .markdown-content:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
     }
     
     .status {
@@ -205,13 +215,23 @@ function createMarkdownTab(data) {
       ${metadata.author ? `<div>Author: ${metadata.author}</div>` : ''}
     </div>
     
-    <div class="markdown-content" id="markdown-content">${escapeHtml(markdown)}</div>
+    <textarea class="markdown-content" id="markdown-content" readonly>${escapeHtml(markdown)}</textarea>
   </div>
   
   <div class="status" id="status">Copied to clipboard!</div>
   
   <script>
     const markdownContent = ${JSON.stringify(markdown)};
+    
+    // Add double-click to select all functionality
+    document.getElementById('markdown-content').addEventListener('dblclick', function() {
+      this.select();
+    });
+    
+    // Ensure textarea is focused when clicked to enable keyboard shortcuts
+    document.getElementById('markdown-content').addEventListener('click', function() {
+      this.focus();
+    });
     
     function copyToClipboard() {
       navigator.clipboard.writeText(markdownContent).then(() => {
