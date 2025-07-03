@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+    }
+    
+    h2 {
+      margin: 0 0 15px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .info {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    
+    .shortcut {
+      font-family: monospace;
+      background: #333;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 3px;
+      display: inline-block;
+      margin: 5px 0;
+    }
+    
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    
+    button:hover {
+      background: #0056b3;
+    }
+    
+    .settings {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .status {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Page to Markdown</h2>
+  
+  <div class="info">
+    <strong>Keyboard Shortcut:</strong><br>
+    <span class="shortcut" id="shortcut">Cmd+M+D</span>
+  </div>
+  
+  <button id="convert">Convert Current Page</button>
+  
+  <div class="settings">
+    <label>
+      <input type="checkbox" id="useReadability" checked>
+      Use Readability for articles
+    </label>
+    <label>
+      <input type="checkbox" id="includeMetadata" checked>
+      Include metadata
+    </label>
+    <label>
+      <input type="checkbox" id="autoCopy">
+      Auto-copy to clipboard
+    </label>
+  </div>
+  
+  <div class="status" id="status"></div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Page to Markdown",
+  "version": "1.0.0",
+  "description": "Convert any web page to Markdown with Cmd+M+D",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "lib/readability.js",
+        "lib/turndown.js",
+        "lib/turndown-plugin-gfm.js",
+        "content.js"
+      ]
+    }
+  ],
+  "commands": {
+    "convert-to-markdown": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      },
+      "description": "Convert current page to Markdown"
+    }
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  }
+}
